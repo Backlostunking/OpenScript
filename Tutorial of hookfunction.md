@@ -127,4 +127,154 @@ Always store the original function (old_function) in case you need to restore it
 
 # CONCLUSION: master hookfunction, scripter exploit and happy coding!
 
-### With this tutorial, you now fully understand hookfunction and how to use it to modify Lua scripts dynamically, tutorial by ScripterMrbacon
+### With this tutorial, you now fully understand hookfunction and how to use it to modify Lua scripts dynamically, tutorial by ScripterMrbacon, you can modify the tutorial too or make it more better and easy to understand!
+
+
+---
+
+# ADVANCED hookfunction TUTORIAL - BLOCKING REMOTES, TOGGLING & BYPASSING ANTICHEAT
+
+## This tutorial will go even deeper into hookfunction, showing how to block RemoteEvents, modify them, toggle hooks, and bypass anticheats!
+
+
+---
+
+# 1. Blocking RemoteEvent Calls
+
+RemoteEvents in Roblox are used to send data between the client and server. If a game sends anti-cheat logs, we can block them using hookfunction.
+
+Example: Block All RemoteEvent Calls
+```Lua
+local old_fireServer = hookfunction(game.ReplicatedStorage.RemoteEvent.FireServer, function(self, ...)
+    print("Blocked RemoteEvent:", self.Name)
+    return -- Prevent the event from firing
+end)
+```
+This will block ALL RemoteEvents from being sent by the client.
+
+Useful for stopping ban logs, damage reports, or cheat detections.
+
+
+
+---
+
+# 2. Modifying RemoteEvent Data
+
+Instead of blocking, we can modify the data before it’s sent.
+
+Example: Modify Damage Sent to Server
+```Lua
+local old_fireServer = hookfunction(game.ReplicatedStorage.DamageEvent.FireServer, function(self, damage, ...)
+    print("Modified Damage: Sent 9999 instead of", damage)
+    return old_fireServer(self, 9999, ...) -- Change damage to 9999
+end)
+```
+If a game tries to send DamageEvent:FireServer(50), it will send 9999 instead!
+
+Useful for making an undetectable damage exploit!
+
+
+
+---
+
+# 3. Hooking Remote Functions (InvokeServer)
+
+RemoteFunctions allow the client to request data from the server. We can intercept and change the responses.
+
+# Example: Always Get Maximum Money from a RemoteFunction
+```Lua
+local old_invokeServer = hookfunction(game.ReplicatedStorage.GetMoney.InvokeServer, function(self, ...)
+    print("Hooked Money Request: Returning 9999999")
+    return 9999999 -- Always return max money
+end)
+```
+If the game calls GetMoney:InvokeServer(), it always returns 9999999!
+
+Useful for faking money, bypassing currency checks, or getting admin privileges!
+
+
+
+---
+
+# 4. Making hookfunction Toggleable
+
+We can add a toggle system so hooks can be turned on or off dynamically.
+
+Example: Toggle Blocking RemoteEvents
+```Lua
+local toggle = true -- Change this to true/false to toggle
+
+local old_fireServer = hookfunction(game.ReplicatedStorage.RemoteEvent.FireServer, function(self, ...)
+    if toggle then
+        print("Blocked RemoteEvent:", self.Name)
+        return
+    end
+    return old_fireServer(self, ...) -- Run normally if toggle is false
+end)
+
+-- Toggle Example
+task.spawn(function()
+    while true do
+        wait(5)
+        toggle = not toggle -- Switch between true/false every 5 seconds
+        print("Hook Toggle:", toggle and "ON" or "OFF")
+    end
+end)
+```
+This script toggles remote blocking every 5 seconds.
+
+Press a GUI button or keybind to control it dynamically.
+
+
+
+---
+
+# 5. Bypassing Game Anticheat with hookfunction
+
+Many games use anti-cheat functions that run in the background. We can hook them and disable them completely.
+
+# Example: Disable isPlayerExploiting Check
+```Lua
+local old_check = hookfunction(game.AntiCheat.isPlayerExploiting, function(...)
+    print("AntiCheat Bypassed!")
+    return false -- Always return false (not exploiting)
+end)
+```
+If the game calls isPlayerExploiting(), it always returns false, preventing bans.
+
+
+
+---
+
+# 6. Hooking and Modifying WalkSpeed Checks
+
+Some games reset WalkSpeed to prevent speed exploits. We can hook it to stop that.
+
+Example: Prevent WalkSpeed From Being Reset
+```Lua
+local old_setWS = hookfunction(game.LocalPlayer.Character.Humanoid.WalkSpeed, function(self, speed)
+    print("Speed Hooked! Trying to set:", speed)
+    if speed < 30 then return end -- Ignore any speed below 30
+    return old_setWS(self, speed)
+end)
+```
+If the game tries to reset WalkSpeed to normal, it will block it unless it’s above 30.
+
+This keeps your speed exploit active!
+
+
+
+---
+
+# CONCLUSION: MASTER HOOKFUNCTION FOR FULL GAME CONTROL!
+
+## With this advanced tutorial, you now know how to:
+### Block RemoteEvents (prevent bans, disable logs)
+### Modify RemoteFunction responses (fake money, change game data)
+### Toggle hooks on/off (dynamic exploits, GUI control)
+### Bypass anti-cheats (disable checks, avoid bans)
+### Prevent forced WalkSpeed resets (speed exploits stay active)
+
+# Sorry if i make tutorial bad
+
+---
